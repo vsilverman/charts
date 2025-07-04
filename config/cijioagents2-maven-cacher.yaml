@@ -2,7 +2,7 @@ image:
   tag: 2.51.0
 
 nodeSelector:
-  kubernetes.io/arch: amd64
+  kubernetes.io/arch: arm64
   jenkins: ci.jenkins.io
   role: applications
 
@@ -32,13 +32,13 @@ containerSecurityContext:
     drop:
       - ALL
 
-#TODO: track with updatecli
 cachePvc: ci-jenkins-io-maven-cache
+#TODO: track with updatecli
 javaHome: /opt/jdk-21
 mavenMirror:
   enable: true
   # TODO: track with updatecli
-  url: http://artifact-caching-proxy.artifact-caching-proxy.svc.cluster.local:8080/
+  url: http://k8s-artifact-artifact-3d1949c260-a3739c22ffe2d924.elb.us-east-2.amazonaws.com:8080/
   # TODO: track with updatecli
   mirrorOf: "external:*,!chimera-releases,!chimera-snapshots,!atlassian-public,!org.zowe.sdk,!jitpack.io,!space-maven"
   mirrorId: artifact-caching-proxy

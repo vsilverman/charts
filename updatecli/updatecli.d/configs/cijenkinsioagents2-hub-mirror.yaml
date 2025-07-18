@@ -1,0 +1,79 @@
+---
+name: Update Docker Registry Hub Mirror Settings for AWS
+
+scms:
+  default:
+    kind: github
+    spec:
+      user: "{{ .github.user }}"
+      email: "{{ .github.email }}"
+      owner: "{{ .github.owner }}"
+      repository: "{{ .github.repository }}"
+      token: "{{ requiredEnv .github.token }}"
+      username: "{{ .github.username }}"
+      branch: "{{ .github.branch }}"
+
+sources:
+  hubMirrorStorageClass:
+    kind: json
+    name: Retrieve the storage class to use for the "Docker Hub Registry Mirror" storage
+    spec:
+      file: https://reports.jenkins.io/jenkins-infra-data-reports/aws-sponsorship.json
+      key: aws\.ci\.jenkins\.io.agents_kubernetes_clusters.cijenkinsio-agents-2.services.hub-mirror.storage_class
+
+  hubMirrorAwsSubnets:
+    kind: json
+    name: Retrieve the list of subnet IDS for the "Docker Hub Registry Mirror" AWS LB
+    spec:
+      file: https://reports.jenkins.io/jenkins-infra-data-reports/aws-sponsorship.json
+      key: aws\.ci\.jenkins\.io.agents_kubernetes_clusters.cijenkinsio-agents-2.services.hub-mirror.subnet_ids
+    transformers:
+      - trimprefix: '['
+      - trimsuffix: ']'
+      - replacer:
+          from: ' '
+          to: ','
+  hubMirrorLbIps:
+    kind: json
+    name: Retrieve the list of subnet IDS for the "Docker Hub Registry Mirror" AWS LB
+    spec:
+      file: https://reports.jenkins.io/jenkins-infra-data-reports/aws-sponsorship.json
+      key: aws\.ci\.jenkins\.io.agents_kubernetes_clusters.cijenkinsio-agents-2.services.hub-mirror.ips
+    transformers:
+      - trimprefix: '['
+      - trimsuffix: ']'
+      - replacer:
+          from: ' '
+          to: ','
+targets:
+  updateHubMirrorLbIps:
+    name: Update the "Docker Hub Registry Mirror" LB IPv4
+    sourceid: hubMirrorLbIps
+    kind: yaml
+    transformers:
+      - addprefix: '"'
+      - addsuffix: '"'
+    spec:
+      file: config/hub-mirror_cijioagents2.yaml
+      key: $.service.annotations.'service.beta.kubernetes.io/aws-load-balancer-private-ipv4-addresses'
+    scmid: default
+  updateHubMirrorLbSubnets:
+    name: Update the "Docker Hub Registry Mirror" LB Subnets
+    disablesourceinput: true # We need to combine 2 sources
+    kind: yaml
+    spec:
+      file: config/hub-mirror_cijioagents2.yaml
+      key: $.service.annotations.'service.beta.kubernetes.io/aws-load-balancer-subnets'
+      value: '"{{ source `hubMirrorAwsSubnets` }}"'
+    scmid: default
+
+actions:
+  default:
+    kind: github/pullrequest
+    scmid: default
+    title: Update Docker Registry Hub Mirror Settings for AWS
+    spec:
+      labels:
+        - docker-registry
+        - hub-mirror
+        - cijenkinsioagents2

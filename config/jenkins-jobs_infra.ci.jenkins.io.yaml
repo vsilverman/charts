@@ -170,14 +170,10 @@ jobsDefinition:
             fileName: "kubeconfig"
             description: "Kubeconfig file for publick8s"
             secretBytes: "${base64:${KUBECONFIG_PUBLICK8S}}"
-          kubeconfig-cijioagents1:
+          kubeconfig-cijioagents2:
             fileName: "kubeconfig"
-            description: "Kubeconfig file for cijioagents1"
-            secretBytes: "${base64:${KUBECONFIG_CIJIOAGENTS1}}"
-          kubeconfig-infracijioagents1:
-            fileName: "kubeconfig"
-            description: "Kubeconfig file for infracijioagents1"
-            secretBytes: "${base64:${KUBECONFIG_INFRACIJIOAGENTS1}}"
+            description: "Kubeconfig file for cijioagents2"
+            secretBytes: "${base64:${KUBECONFIG_CIJIOAGENTS2}}"
           kubeconfig-infracijioagents2:
             fileName: "kubeconfig"
             description: "Kubeconfig file for infracijioagents2"
@@ -644,6 +640,10 @@ jobsDefinition:
         # See https://github.com/jenkins-infra/helpdesk/issues/4282
         allowUntrustedChanges: false
         jenkinsfilePath: Jenkinsfile
+        credentials:
+          fastly-api-token-purge:
+            secret: "${FASTLY_API_TOKEN_PURGE}"
+            description: "Fastly API token used for purging CDN pages"
       plugin-site:
         name: Plugin Site
         # See https://github.com/jenkins-infra/helpdesk/issues/4282
@@ -670,6 +670,9 @@ jobsDefinition:
             description: "plugins.jenkins.io File Share Service Principal Writer"
             subscriptionId: "${JENKINSINFRA_AZURE_PRIMARY_SUBSCRIPTION_ID}"
             tenant: "${JENKINSINFRA_AZURE_TENANT_ID}"
+          fastly-api-token-purge:
+            secret: "${FASTLY_API_TOKEN_PURGE}"
+            description: "Fastly API token used for purging CDN pages"
       jenkins-io-components:
         name: Jenkins.io Web Components
         # See https://github.com/jenkins-infra/helpdesk/issues/4282
@@ -716,6 +719,9 @@ jobsDefinition:
             description: "Contributors.jenkins.io File Share Service Principal Writer"
             subscriptionId: "${JENKINSINFRA_AZURE_PRIMARY_SUBSCRIPTION_ID}"
             tenant: "${JENKINSINFRA_AZURE_TENANT_ID}"
+          fastly-api-token-purge:
+            secret: "${FASTLY_API_TOKEN_PURGE}"
+            description: "Fastly API token used for purging CDN pages"
       docs.jenkins.io:
         name: docs.jenkins.io
         description: "Versioned docs of jenkins.io"
@@ -730,6 +736,9 @@ jobsDefinition:
             description: "docs.jenkins.io File Share Service Principal Writer"
             subscriptionId: "${JENKINSINFRA_AZURE_PRIMARY_SUBSCRIPTION_ID}"
             tenant: "${JENKINSINFRA_AZURE_TENANT_ID}"
+          fastly-api-token-purge:
+            secret: "${FASTLY_API_TOKEN_PURGE}"
+            description: "Fastly API token used for purging CDN pages"
       stats.jenkins.io:
         name: stats.jenkins.io PR previews
         # See https://github.com/jenkins-infra/helpdesk/issues/4282

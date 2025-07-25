@@ -38,7 +38,8 @@ targets:
     name: Update maven-cacher Docker image tag
     kind: yaml
     spec:
-      file: ./config/cijioagents1-maven-cacher.yaml
+      files:
+        - ./config/cijioagents2-maven-cacher.yaml
       key: $.image.tag
     scmid: default
 

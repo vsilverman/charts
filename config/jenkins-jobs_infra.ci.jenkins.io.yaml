@@ -109,12 +109,12 @@ jobsDefinition:
           packer-aws-secret-access-key:
             description: AWS Secret key for the user packer
             secret: "${PACKER_AWS_SECRET_ACCESS_KEY}"
-          packer-azure-serviceprincipal-sponsorship:
+          packer-azure-serviceprincipal:
             azureEnvironmentName: "Azure"
             clientId: "${PACKER_AZURE_CLIENT_ID}"
             clientSecret: "${PACKER_AZURE_CLIENT_SECRET_VALUE}"
-            description: "Azure Service Principal credential used by packer on secondary subscription"
-            subscriptionId: "${JENKINSINFRA_AZURE_SECONDARY_SUBSCRIPTION_ID}"
+            description: "Azure Service Principal credential used by packer on CDF subscription"
+            subscriptionId: "dff2ec18-6a8e-405c-8e45-b7df7465acf0"
             tenant: "${PACKER_AZURE_TENANT_ID}"
           jenkinsinfraadmin-dockerhub-push: *jenkinsinfraadmin-dockerhub-push-def
       jenkins-infra:
@@ -131,12 +131,12 @@ jobsDefinition:
         enableGitHubChecks: false
         disableGitHubNotifications: true
         credentials:
-          packer-azure-serviceprincipal-sponsorship:
+          packer-azure-serviceprincipal:
             azureEnvironmentName: "Azure"
             clientId: "${PACKER_AZURE_CLIENT_ID}"
             clientSecret: "${PACKER_AZURE_CLIENT_SECRET_VALUE}"
-            description: "Azure Service Principal credential used by packer on secondary subscription"
-            subscriptionId: "${JENKINSINFRA_AZURE_SECONDARY_SUBSCRIPTION_ID}"
+            description: "Azure Service Principal credential used by packer on CDF subscription"
+            subscriptionId: "dff2ec18-6a8e-405c-8e45-b7df7465acf0"
             tenant: "${PACKER_AZURE_TENANT_ID}"
           packer-aws-access-key-id:
             description: AWS API key for the user packer
@@ -162,6 +162,10 @@ jobsDefinition:
           sops-tenant-id:
             secret: "${SOPS_TENANT_ID}"
             description: Azure tenant id used by sops to decrypt secrets
+          kubeconfig-privatek8s:
+            fileName: "kubeconfig"
+            description: "Kubeconfig file for privatek8s"
+            secretBytes: "${base64:${KUBECONFIG_PRIVATEK8S}}"
           kubeconfig-privatek8s-sponsorship:
             fileName: "kubeconfig"
             description: "Kubeconfig file for privatek8s_sponsorship"
@@ -170,14 +174,10 @@ jobsDefinition:
             fileName: "kubeconfig"
             description: "Kubeconfig file for publick8s"
             secretBytes: "${base64:${KUBECONFIG_PUBLICK8S}}"
-          kubeconfig-cijioagents1:
+          kubeconfig-cijioagents2:
             fileName: "kubeconfig"
-            description: "Kubeconfig file for cijioagents1"
-            secretBytes: "${base64:${KUBECONFIG_CIJIOAGENTS1}}"
-          kubeconfig-infracijioagents1:
-            fileName: "kubeconfig"
-            description: "Kubeconfig file for infracijioagents1"
-            secretBytes: "${base64:${KUBECONFIG_INFRACIJIOAGENTS1}}"
+            description: "Kubeconfig file for cijioagents2"
+            secretBytes: "${base64:${KUBECONFIG_CIJIOAGENTS2}}"
           kubeconfig-infracijioagents2:
             fileName: "kubeconfig"
             description: "Kubeconfig file for infracijioagents2"
@@ -300,7 +300,7 @@ jobsDefinition:
             clientId: "${PACKER_AZURE_CLIENT_ID}"
             clientSecret: "${PACKER_AZURE_CLIENT_SECRET_VALUE}"
             description: "Azure Service Principal credential used by updatecli"
-            subscriptionId: "${JENKINSINFRA_AZURE_SECONDARY_SUBSCRIPTION_ID}"
+            subscriptionId: "dff2ec18-6a8e-405c-8e45-b7df7465acf0"
             tenant: "${PACKER_AZURE_TENANT_ID}"
       packer-images:
         jenkinsfilePath: Jenkinsfile_updatecli
@@ -317,7 +317,7 @@ jobsDefinition:
             clientId: "${UPDATECLI_AZURE_CLIENT_ID}"
             clientSecret: "${UPDATECLI_AZURE_CLIENT_SECRET}"
             description: "Azure Service Principal credential used by updatecli"
-            subscriptionId: "${JENKINSINFRA_AZURE_SECONDARY_SUBSCRIPTION_ID}"
+            subscriptionId: "dff2ec18-6a8e-405c-8e45-b7df7465acf0"
             tenant: "${UPDATECLI_AZURE_TENANT_ID}"
       pipeline-library:
         name: Shared Pipeline Library
@@ -644,6 +644,10 @@ jobsDefinition:
         # See https://github.com/jenkins-infra/helpdesk/issues/4282
         allowUntrustedChanges: false
         jenkinsfilePath: Jenkinsfile
+        credentials:
+          fastly-api-token-purge:
+            secret: "${FASTLY_API_TOKEN_PURGE}"
+            description: "Fastly API token used for purging CDN pages"
       plugin-site:
         name: Plugin Site
         # See https://github.com/jenkins-infra/helpdesk/issues/4282
@@ -668,8 +672,11 @@ jobsDefinition:
             clientId: "${INFRACI_PLUGINSJENKINSIO_FILESHARE_SERVICE_PRINCIPAL_WRITER_CLIENT_ID}"
             clientSecret: "${INFRACI_PLUGINSJENKINSIO_FILESHARE_SERVICE_PRINCIPAL_WRITER_PASSWORD}"
             description: "plugins.jenkins.io File Share Service Principal Writer"
-            subscriptionId: "${JENKINSINFRA_AZURE_PRIMARY_SUBSCRIPTION_ID}"
+            subscriptionId: "dff2ec18-6a8e-405c-8e45-b7df7465acf0"
             tenant: "${JENKINSINFRA_AZURE_TENANT_ID}"
+          fastly-api-token-purge:
+            secret: "${FASTLY_API_TOKEN_PURGE}"
+            description: "Fastly API token used for purging CDN pages"
       jenkins-io-components:
         name: Jenkins.io Web Components
         # See https://github.com/jenkins-infra/helpdesk/issues/4282
@@ -714,8 +721,11 @@ jobsDefinition:
             clientId: "${CONTRIBUTORS_SERVICE_PRINCIPAL_WRITER_CLIENT_ID}"
             clientSecret: "${CONTRIBUTORS_SERVICE_PRINCIPAL_WRITER_CLIENT_SECRET}"
             description: "Contributors.jenkins.io File Share Service Principal Writer"
-            subscriptionId: "${JENKINSINFRA_AZURE_PRIMARY_SUBSCRIPTION_ID}"
+            subscriptionId: "dff2ec18-6a8e-405c-8e45-b7df7465acf0"
             tenant: "${JENKINSINFRA_AZURE_TENANT_ID}"
+          fastly-api-token-purge:
+            secret: "${FASTLY_API_TOKEN_PURGE}"
+            description: "Fastly API token used for purging CDN pages"
       docs.jenkins.io:
         name: docs.jenkins.io
         description: "Versioned docs of jenkins.io"
@@ -728,8 +738,11 @@ jobsDefinition:
             clientId: "${DOCS_SERVICE_PRINCIPAL_WRITER_CLIENT_ID}"
             clientSecret: "${DOCS_SERVICE_PRINCIPAL_WRITER_CLIENT_SECRET}"
             description: "docs.jenkins.io File Share Service Principal Writer"
-            subscriptionId: "${JENKINSINFRA_AZURE_PRIMARY_SUBSCRIPTION_ID}"
+            subscriptionId: "dff2ec18-6a8e-405c-8e45-b7df7465acf0"
             tenant: "${JENKINSINFRA_AZURE_TENANT_ID}"
+          fastly-api-token-purge:
+            secret: "${FASTLY_API_TOKEN_PURGE}"
+            description: "Fastly API token used for purging CDN pages"
       stats.jenkins.io:
         name: stats.jenkins.io PR previews
         # See https://github.com/jenkins-infra/helpdesk/issues/4282
@@ -756,5 +769,5 @@ jobsDefinition:
             clientId: "${STATS_SERVICE_PRINCIPAL_WRITER_CLIENT_ID}"
             clientSecret: "${STATS_SERVICE_PRINCIPAL_WRITER_CLIENT_SECRET}"
             description: "stats.jenkins.io File Share Service Principal Writer"
-            subscriptionId: "${JENKINSINFRA_AZURE_PRIMARY_SUBSCRIPTION_ID}"
+            subscriptionId: "dff2ec18-6a8e-405c-8e45-b7df7465acf0"
             tenant: "${JENKINSINFRA_AZURE_TENANT_ID}"

@@ -30,7 +30,7 @@ releases:
   - name: datadog
     namespace: datadog
     chart: datadog/datadog
-    version: 3.120.0
+    version: 3.123.2
     values:
       - "../config/datadog.yaml.gotmpl"
       - "../config/datadog_publick8s.yaml"
@@ -40,7 +40,7 @@ releases:
   - name: cert-manager
     namespace: cert-manager
     chart: jetstack/cert-manager
-    version: v1.18.1
+    version: v1.18.2
     values:
       - "../config/cert-manager.yaml"
       - "../config/cert-manager_publick8s.yaml"
@@ -57,27 +57,27 @@ releases:
   - name: public-nginx-ingress
     namespace: public-nginx-ingress
     chart: ingress-nginx/ingress-nginx
-    version: 4.11.7
+    version: 4.11.8
     values:
       - "../config/public-nginx-ingress__common.yaml"
       - "../config/public-nginx-ingress_publick8s.yaml"
   - name: private-nginx-ingress
     namespace: private-nginx-ingress
     chart: ingress-nginx/ingress-nginx
-    version: 4.11.7
+    version: 4.11.8
     values:
       - "../config/private-nginx-ingress__common.yaml"
       - "../config/private-nginx-ingress_publick8s.yaml"
   - name: falco
     namespace: falco
     chart: falco/falco
-    version: 6.0.1
+    version: 6.0.2
     values:
       - "../config/falco.yaml"
   - name: jenkins-weekly
     namespace: jenkins-weekly
     chart: jenkins/jenkins
-    version: 5.8.61
+    version: 5.8.72
     needs:
       - public-nginx-ingress/public-nginx-ingress # Required to expose both the UI and the webhooks endpoint
     values:
@@ -101,7 +101,7 @@ releases:
   - name: ldap
     namespace: ldap
     chart: jenkins-infra/ldap
-    version: 4.1.0
+    version: 4.1.2
     values:
       - "../config/ldap.yaml"
     secrets:
@@ -120,7 +120,7 @@ releases:
   - name: plugin-health-scoring
     namespace: plugin-health-scoring
     chart: jenkins-infra/plugin-health-scoring
-    version: 3.1.0
+    version: 3.1.1
     needs:
       - public-nginx-ingress/public-nginx-ingress # Required to expose the service
     values:
@@ -168,7 +168,7 @@ releases:
   - name: accountapp
     namespace: accountapp
     chart: jenkins-infra/accountapp
-    version: 0.9.2
+    version: 0.9.6
     needs:
       - ldap/ldap
     values:
@@ -178,7 +178,7 @@ releases:
   - name: get-jenkins-io
     namespace: get-jenkins-io
     chart: jenkins-infra/mirrorbits-parent
-    version: 7.0.28
+    version: 7.0.31
     values:
       - "../config/get-jenkins-io.yaml"
     secrets:
@@ -186,7 +186,7 @@ releases:
   - name: plugin-site-issues
     namespace: plugin-site
     chart: jenkins-infra/plugin-site-issues
-    version: 0.3.2
+    version: 0.3.12
     values:
       - "../config/plugin-site-issues.yaml"
     secrets:
@@ -218,7 +218,7 @@ releases:
   - name: updates-jenkins-io-content-secured
     namespace: updates-jenkins-io
     chart: jenkins-infra/mirrorbits
-    version: 5.5.22
+    version: 5.5.23
     values:
       - "../config/updates.jenkins.io-content-secured.yaml"
     secrets:
@@ -227,13 +227,13 @@ releases:
   - name: updates-jenkins-io-rsync
     namespace: updates-jenkins-io
     chart: jenkins-infra/rsyncd
-    version: 3.1.26
+    version: 3.1.28
     values:
       - "../config/updates.jenkins.io-rsync.yaml"
   - name: updates-jenkins-io-content-unsecured
     namespace: updates-jenkins-io
     chart: jenkins-infra/mirrorbits
-    version: 5.5.22
+    version: 5.5.23
     values:
       - "../config/updates.jenkins.io-content-unsecured.yaml"
     secrets:
@@ -241,20 +241,20 @@ releases:
   - name: updates-jenkins-io-httpd-secured
     namespace: updates-jenkins-io
     chart: jenkins-infra/httpd
-    version: 1.4.5
+    version: 1.4.7
     values:
       - "../config/updates.jenkins.io_httpd-secured.yaml"
   - name: updates-jenkins-io-httpd-unsecured
     namespace: updates-jenkins-io
     chart: jenkins-infra/httpd
-    version: 1.4.5
+    version: 1.4.7
     values:
       - "../config/updates.jenkins.io_httpd-unsecured.yaml"
   # Service used to fill the shared Azure File PVC through rsync from trusted.ci
   - name: updates-jenkins-io-rsyncd-data
     namespace: updates-jenkins-io
     chart: jenkins-infra/rsyncd
-    version: 3.1.26
+    version: 3.1.28
     values:
       - "../config/updates.jenkins.io-rsyncd-data.yaml"
     secrets:
@@ -286,7 +286,7 @@ releases:
   - name: geoipdata
     namespace: geoip-data
     chart: jenkins-infra/geoipupdates
-    version: 2.25.0
+    version: 2.28.0
     values:
       - ../config/geoipdata.yaml
     secrets:
